@@ -4,6 +4,7 @@ using Skua.Core.Models.Items;
 
 namespace Skua.Core.Scripts;
 
+#pragma warning disable CS0169 // Field is never used
 public partial class ScriptHouseInv : IScriptHouseInv
 {
     private readonly Lazy<IFlashUtil> _lazyFlash;
@@ -40,7 +41,7 @@ public partial class ScriptHouseInv : IScriptHouseInv
     }
 
     [ObjectBinding("world.myAvatar.houseitems", Default = "new()")]
-    private List<InventoryItem> _items;
+    private List<InventoryItem> _items = new();
 
     [ObjectBinding("world.myAvatar.objData.iHouseSlots")]
     private int _slots;

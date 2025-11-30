@@ -1,20 +1,20 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Skua.Core.Models.GitHub;
 
 public class ScriptInfo
 {
     [JsonProperty("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     [JsonProperty("description")]
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     [JsonProperty("tags")]
-    public string[] Tags { get; set; }
+    public string[] Tags { get; set; } = Array.Empty<string>();
 
     [JsonProperty("path")]
-    public string FilePath { get; set; }
+    public string FilePath { get; set; } = string.Empty;
 
     [JsonProperty("size")]
     public int Size { get; set; }
@@ -23,10 +23,10 @@ public class ScriptInfo
     public string? Sha256 { get; set; }
 
     [JsonProperty("fileName")]
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
     [JsonProperty("downloadUrl")]
-    public string DownloadUrl { get; set; }
+    public string DownloadUrl { get; set; } = string.Empty;
 
     public string RelativePath => FilePath == FileName ? "Scripts/" : $"Scripts/{FilePath.Replace(FileName, "")}";
 

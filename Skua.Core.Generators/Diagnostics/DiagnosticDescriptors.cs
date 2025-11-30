@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 
 namespace Skua.Core.Generators.Diagnostics;
 
@@ -30,8 +30,8 @@ internal static class DiagnosticDescriptors
     /// </summary>
     public static DiagnosticDescriptor CallBindingPathNullorEmpty = new(
         id: "SkuaGen_002",
-        title: "The Path for the binding is null, empty or whitespace.",
-        messageFormat: "The field {0}.{1} cannot be used to generate a call binding property, as its Path value is not defined.",
+        title: "The Path for the binding is null, empty or whitespace",
+        messageFormat: "The field {0}.{1} cannot be used to generate a call binding property, as its Path value is not defined",
         category: typeof(CallBindingGenerator).FullName,
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -60,8 +60,8 @@ internal static class DiagnosticDescriptors
     /// </summary>
     public static DiagnosticDescriptor ObjectBindingPathNullorEmpty = new(
         id: "SkuaGen_004",
-        title: "The Path for the binding is null, empty or whitespace.",
-        messageFormat: "The field {0}.{1} cannot be used to generate a object binding property, as its Paths value is not defined.",
+        title: "The Path for the binding is null, empty or whitespace",
+        messageFormat: "The field {0}.{1} cannot be used to generate an object binding property, as its Paths value is not defined",
         category: typeof(ObjectBindingGenerator).FullName,
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,
@@ -90,8 +90,8 @@ internal static class DiagnosticDescriptors
     /// </summary>
     public static DiagnosticDescriptor ModuleBindingPathNullorEmpty = new(
         id: "SkuaGen_006",
-        title: "The Name for the binding is null, empty or whitespace.",
-        messageFormat: "The field {0}.{1} cannot be used to generate a module binding property, as its Name value is not defined.",
+        title: "The Name for the binding is null, empty or whitespace",
+        messageFormat: "The field {0}.{1} cannot be used to generate a module binding property, as its Name value is not defined",
         category: typeof(ModuleBindingGenerator).FullName,
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true,

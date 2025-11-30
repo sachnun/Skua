@@ -23,7 +23,7 @@
   </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Caseless.Fody" Version="1.9.1" />
+        <PackageReference Include="Caseless.Fody" Version="1.9.1" PrivateAssets="All" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
         <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0" />

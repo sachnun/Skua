@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Skua.Core.Interfaces;
@@ -49,7 +49,7 @@ public partial class ClientUpdatesViewModel : BotControlViewModelBase
     protected override void OnActivated()
     {
         if (Releases.Count == 0)
-            Refresh();
+            _ = Refresh();
     }
 
     protected override void OnDeactivated()

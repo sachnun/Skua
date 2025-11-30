@@ -41,12 +41,12 @@ public partial class ScriptOption : ObservableRecipient, IScriptOption, IOptionD
     }
 
     private readonly Lazy<IFlashUtil> _lazyFlash;
-    private readonly ISettingsService _settingsService;
+    private readonly ISettingsService _settingsService = default!;
     private Dictionary<string, string>? _userOptions;
 
     private IFlashUtil Flash => _lazyFlash.Value;
 
-    public ImmutableDictionary<string, Func<object>> OptionDictionary { get; }
+    public ImmutableDictionary<string, Func<object>> OptionDictionary { get; } = default!;
 
     [ObservableProperty]
     private bool _attackWithoutTarget;

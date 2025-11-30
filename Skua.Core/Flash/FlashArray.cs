@@ -1,4 +1,4 @@
-﻿using Skua.Core.Interfaces;
+using Skua.Core.Interfaces;
 using System.Collections;
 
 namespace Skua.Core.Flash;
@@ -35,7 +35,7 @@ public class FlashArray<T> : FlashObject<T[]>, IFlashArray<T>, IEnumerable<Flash
         private FlashArray<S> _array;
         private FlashObject<int> _length;
 
-        public FlashObject<S> Current { get; set; }
+        public FlashObject<S> Current { get; set; } = default!;
         object IEnumerator.Current => Current;
 
         public FlashArrayEnumerator(FlashArray<S> array)

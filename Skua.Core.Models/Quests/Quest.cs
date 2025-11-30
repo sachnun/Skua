@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Skua.Core.Models.Converters;
 using Skua.Core.Models.Items;
 
@@ -28,19 +28,19 @@ public class Quest
     /// The name of the quest.
     /// </summary>
     [JsonProperty("sName")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The description of the quest.
     /// </summary>
     [JsonProperty("sDesc")]
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// The description of the quest after completion.
     /// </summary>
     [JsonProperty("sEndText")]
-    public string EndText { get; set; }
+    public string EndText { get; set; } = string.Empty;
 
     /// <summary>
     /// Whether this quest can only be completed once.
@@ -53,7 +53,7 @@ public class Quest
     /// The field of the quest.
     /// </summary>
     [JsonProperty("sField")]
-    public string Field { get; set; }
+    public string Field { get; set; } = string.Empty;
 
     /// <summary>
     /// The index of the quest.
@@ -114,7 +114,7 @@ public class Quest
     /// The status of the quest.
     /// </summary>
     [JsonProperty("status")]
-    public string Status { get; set; }
+    public string? Status { get; set; }
 
     /// <summary>
     /// Indicates whether the quest is active or not.
@@ -135,12 +135,12 @@ public class Quest
     [JsonProperty("turnin")]
     private List<SimpleRequirement> _turnin = new();
 
-    private List<ItemBase> _reqCache;
+    private List<ItemBase>? _reqCache;
 
     /// <summary>
     /// The items used to turn in the quest.
     /// </summary>
-    public List<ItemBase> Requirements => _reqCache ??= _reqs.Select(x => (x.Quantity = _turnin.Find(y => y.ID == x.ID).Quantity) != -1 ? x : x).ToList();
+    public List<ItemBase> Requirements => _reqCache ??= _reqs.Select(x => { var turnin = _turnin.Find(y => y.ID == x.ID); x.Quantity = turnin?.Quantity ?? x.Quantity; return x; }).ToList();
 
     /// <summary>
     /// The items given as a reward for completing the quest.

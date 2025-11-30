@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
 namespace Skua.Core.Interfaces;
 
@@ -81,7 +81,7 @@ public interface IScriptBotStats : INotifyPropertyChanged
     void Reset();
 
     /// <summary>
-    /// Gets Inventory & bank space
+    /// Gets Inventory and bank space.
     /// </summary>
     void GetSpace();
 }

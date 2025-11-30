@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Skua.Core.Interfaces;
@@ -18,10 +18,8 @@ public partial class ScriptRepoViewModel : BotControlViewModelBase
         OpenScriptFolderCommand = new RelayCommand(_processService.OpenVSC);
     }
 
-    protected override void OnActivated()
-    {
-        RefreshScriptsList();
-    }
+    private bool _isInitialized;
+    private CancellationTokenSource? _syncCts;
 
     private readonly IGetScriptsService _getScriptsService;
     private readonly IProcessService _processService;
@@ -49,34 +47,78 @@ public partial class ScriptRepoViewModel : BotControlViewModelBase
     public int BotScriptQuantity => _scripts.Count;
     public IRelayCommand OpenScriptFolderCommand { get; }
 
-    [RelayCommand]
-    private void OpenScript()
+    /// <summary>
+    /// Initialize and load scripts. Call this when the view becomes visible.
+    /// </summary>
+    public void Initialize()
     {
-        if (SelectedItem is null || !SelectedItem.Downloaded)
-            return;
-
-        StrongReferenceMessenger.Default.Send<EditScriptMessage, int>(new(SelectedItem.LocalFile), (int)MessageChannels.ScriptStatus);
+        if (!_isInitialized)
+        {
+            _isInitialized = true;
+            _ = AutoSyncAsync();
+        }
     }
 
-    [RelayCommand]
-    private async Task RefreshScripts(CancellationToken token)
+    protected override void OnActivated()
     {
+        Initialize();
+    }
+
+    /// <summary>
+    /// Automatically fetches scripts, updates outdated ones, and refreshes the list.
+    /// </summary>
+    private async Task AutoSyncAsync()
+    {
+        _syncCts?.Cancel();
+        _syncCts = new CancellationTokenSource();
+        CancellationToken token = _syncCts.Token;
+
         IsBusy = true;
+
         try
         {
+            // Step 1: Fetch script list from remote
+            ProgressReportMessage = "Fetching scripts...";
             await Task.Run(async () =>
             {
                 Progress<string> progress = new(ProgressHandler);
                 await _getScriptsService.GetScriptsAsync(progress, token);
             }, token);
+
+            if (token.IsCancellationRequested)
+                return;
+
+            // Step 2: Refresh UI list
+            RefreshScriptsList();
+
+            // Step 3: Auto-update outdated scripts silently
+            int outdated = _getScriptsService?.Outdated ?? 0;
+            if (outdated > 0)
+            {
+                ProgressReportMessage = $"Updating {outdated} scripts...";
+                int count = await _getScriptsService!.DownloadAllWhereAsync(s => s.Outdated);
+                RefreshScriptsList();
+            }
+
+            ProgressReportMessage = string.Empty;
         }
-        catch { }
-        RefreshScriptsList();
+        catch (OperationCanceledException)
+        {
+            // Cancelled, ignore
+        }
+        catch
+        {
+            ProgressReportMessage = string.Empty;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private void RefreshScriptsList()
     {
-        _scripts.Clear();
+        List<ScriptInfoViewModel> newScripts = new();
         if (_getScriptsService?.Scripts != null)
         {
             foreach (ScriptInfo script in _getScriptsService.Scripts)
@@ -91,17 +133,18 @@ public partial class ScriptRepoViewModel : BotControlViewModelBase
                     else if (script.Tags == null)
                         script.Tags = new[] { "no-tags" };
 
-                    _scripts.Add(new(script));
+                    newScripts.Add(new(script));
                 }
             }
         }
+
+        _scripts.ReplaceRange(newScripts);
 
         OnPropertyChanged(nameof(Scripts));
         OnPropertyChanged(nameof(DownloadedQuantity));
         OnPropertyChanged(nameof(OutdatedQuantity));
         OnPropertyChanged(nameof(ScriptQuantity));
         OnPropertyChanged(nameof(BotScriptQuantity));
-        IsBusy = false;
     }
 
     public void ProgressHandler(string message)
@@ -110,73 +153,51 @@ public partial class ScriptRepoViewModel : BotControlViewModelBase
     }
 
     [RelayCommand]
+    private void OpenScript()
+    {
+        if (SelectedItem is null || !SelectedItem.Downloaded)
+            return;
+
+        StrongReferenceMessenger.Default.Send<EditScriptMessage, int>(new(SelectedItem.LocalFile), (int)MessageChannels.ScriptStatus);
+    }
+
+    [RelayCommand]
     private async Task Delete()
     {
-        IsBusy = true;
         if (_selectedItem is null)
             return;
-        ProgressReportMessage = $"Deleting {_selectedItem.FileName}.";
+
+        IsBusy = true;
+        ProgressReportMessage = $"Deleting {_selectedItem.FileName}...";
         await _getScriptsService.DeleteScriptAsync(_selectedItem.Info);
-        ProgressReportMessage = $"Deleted {_selectedItem.FileName}.";
         _selectedItem.Downloaded = false;
         OnPropertyChanged(nameof(DownloadedQuantity));
         OnPropertyChanged(nameof(OutdatedQuantity));
-        OnPropertyChanged(nameof(ScriptQuantity));
-        OnPropertyChanged(nameof(BotScriptQuantity));
+        ProgressReportMessage = string.Empty;
         IsBusy = false;
     }
 
     [RelayCommand]
     private async Task Download()
     {
-        IsBusy = true;
         if (_selectedItem is null)
             return;
-        ProgressReportMessage = $"Downloading {_selectedItem.FileName}.";
+
+        IsBusy = true;
+        ProgressReportMessage = $"Downloading {_selectedItem.FileName}...";
         await _getScriptsService.DownloadScriptAsync(_selectedItem.Info);
-        ProgressReportMessage = $"Downloaded {_selectedItem.FileName}.";
         _selectedItem.Downloaded = true;
         OnPropertyChanged(nameof(DownloadedQuantity));
         OnPropertyChanged(nameof(OutdatedQuantity));
-        OnPropertyChanged(nameof(ScriptQuantity));
-        OnPropertyChanged(nameof(BotScriptQuantity));
+        ProgressReportMessage = string.Empty;
         IsBusy = false;
-    }
-
-    [RelayCommand]
-    private async Task UpdateAll()
-    {
-        IsBusy = true;
-        ProgressReportMessage = "Updating scripts...";
-        int count = await _getScriptsService.DownloadAllWhereAsync(s => s.Outdated);
-        ProgressReportMessage = $"Updated {count} scripts.";
-        RefreshScriptsList();
-    }
-
-    [RelayCommand]
-    private async Task DownloadAll()
-    {
-        IsBusy = true;
-        ProgressReportMessage = "Downloading outdated/missing scripts...";
-        int count = await Task.Run(async () => await _getScriptsService.DownloadAllWhereAsync(s => !s.Downloaded || s.Outdated));
-        ProgressReportMessage = $"Downloaded {count} scripts.";
-        RefreshScriptsList();
     }
 
     [RelayCommand]
     public void CancelTask()
     {
-        if (RefreshScriptsCommand.IsRunning)
-            RefreshScriptsCommand.Cancel();
-        else if (DownloadAllCommand.IsRunning)
-            DownloadAllCommand.Cancel();
-        else if (UpdateAllCommand.IsRunning)
-            UpdateAllCommand.Cancel();
-        else if (DownloadCommand.IsRunning)
-            DownloadCommand.Cancel();
-        else if (DeleteCommand.IsRunning)
-            DeleteCommand.Cancel();
-        else
-            ProgressReportMessage = string.Empty;
+        _syncCts?.Cancel();
+        ProgressReportMessage = string.Empty;
+        IsBusy = false;
     }
 }

@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
 using Skua.Core.Interfaces;
@@ -14,7 +14,6 @@ internal class MainMenu
 
         List<MainMenuItemViewModel> menuItems = new()
         {
-            new("Scripts"),
             new("Options", new List<MainMenuItemViewModel>()
             {
                 new("Game"),
@@ -47,6 +46,6 @@ internal class MainMenu
             new("Logs")
         };
 
-        return new(menuItems, s.GetRequiredService<AutoViewModel>(), s.GetRequiredService<JumpViewModel>(), s.GetRequiredService<IWindowService>());
+        return new(menuItems, s.GetRequiredService<AutoViewModel>(), s.GetRequiredService<JumpViewModel>());
     }
 }

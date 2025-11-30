@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Skua.Core.Messaging;
@@ -40,7 +40,12 @@ public partial class ScriptInfoViewModel : ObservableObject
         if (selectedScript is null || !selectedScript.Downloaded)
             return;
 
-        StrongReferenceMessenger.Default.Send<LoadScriptMessage, int>(new(selectedScript.LocalFile), (int)MessageChannels.ScriptStatus);
+        StrongReferenceMessenger.Default.Send<LoadScriptMessage, int>(
+            new(selectedScript.LocalFile, selectedScript.Info.Name), 
+            (int)MessageChannels.ScriptStatus);
+        
+        // Send message to close the window
+        StrongReferenceMessenger.Default.Send<CloseScriptRepoMessage>();
     }
 
     [RelayCommand]
@@ -49,7 +54,12 @@ public partial class ScriptInfoViewModel : ObservableObject
         if (selectedScript is null || !selectedScript.Downloaded)
             return;
 
-        StrongReferenceMessenger.Default.Send<StartScriptMessage, int>(new(selectedScript.LocalFile), (int)MessageChannels.ScriptStatus);
+        StrongReferenceMessenger.Default.Send<StartScriptMessage, int>(
+            new(selectedScript.LocalFile, selectedScript.Info.Name), 
+            (int)MessageChannels.ScriptStatus);
+        
+        // Send message to close the window
+        StrongReferenceMessenger.Default.Send<CloseScriptRepoMessage>();
     }
 
     public override string ToString()

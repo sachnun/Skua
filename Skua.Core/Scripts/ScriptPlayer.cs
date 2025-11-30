@@ -10,6 +10,7 @@ using Skua.Core.Models.Skills;
 
 namespace Skua.Core.Scripts;
 
+#pragma warning disable CS0169 // Field is never used
 public partial class ScriptPlayer : IScriptPlayer
 {
     private readonly Lazy<IFlashUtil> _lazyFlash;
@@ -43,13 +44,13 @@ public partial class ScriptPlayer : IScriptPlayer
     private int _requiredXP;
 
     [ObjectBinding("world.strFrame", Default = "string.Empty")]
-    private string _cell;
+    private string _cell = string.Empty;
 
     [ObjectBinding("world.strPad", Default = "string.Empty")]
-    private string _pad;
+    private string _pad = string.Empty;
 
     [ObjectBinding("serverIP", IsStatic = true, Default = "string.Empty")]
-    private string _serverIP;
+    private string _serverIP = string.Empty;
 
     public bool Playing => LoggedIn && Alive;
 
@@ -57,13 +58,13 @@ public partial class ScriptPlayer : IScriptPlayer
     private bool _loggedIn;
 
     [ObjectBinding("loginInfo.strUsername", IsStatic = true)]
-    private string _username;
+    private string _username = string.Empty;
 
     [ObjectBinding("loginInfo.strPassword", IsStatic = true)]
-    private string _password;
+    private string _password = string.Empty;
 
     [ObjectBinding("world.myAvatar.objData.guild.Name")]
-    private string _guild;
+    private string _guild = string.Empty;
 
     [CallBinding("isKicked")]
     private bool _kicked;
@@ -113,7 +114,7 @@ public partial class ScriptPlayer : IScriptPlayer
     private int _accessLevel;
 
     [ObjectBinding("world.actions.active", Default = "Array.Empty<Skua.Core.Models.Skills.SkillInfo>()")]
-    private SkillInfo[] _skills;
+    private SkillInfo[] _skills = Array.Empty<SkillInfo>();
 
     [ObjectBinding("world.myAvatar.dataLeaf.afk")]
     private bool _AFK;

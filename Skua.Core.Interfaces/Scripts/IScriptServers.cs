@@ -1,4 +1,4 @@
-﻿using Skua.Core.Models.Servers;
+using Skua.Core.Models.Servers;
 using System.ComponentModel;
 
 namespace Skua.Core.Interfaces;
@@ -105,10 +105,10 @@ public interface IScriptServers : INotifyPropertyChanged
     void Logout();
 
     /// <summary>
-    /// Logs in and connects to the server with specified <paramref name="name"/>.
+    /// Logs in and connects to the server with specified <paramref name="serverName"/>.
     /// </summary>
     /// <param name="serverName">Name of the server to connect to.</param>
-    /// <param name="loginDelay">Delay before trying to connect to the <paramref name="server"/></param>
+    /// <param name="loginDelay">Delay before trying to connect to the server.</param>
     bool Reconnect(string serverName, int loginDelay = 2000);
 
     /// <summary>
@@ -137,7 +137,7 @@ public interface IScriptServers : INotifyPropertyChanged
     /// <summary>
     /// Logs out and then tries to log in back.
     /// </summary>
-    /// <param name="serverName">IP of the server to connect to.</param>
+    /// <param name="ip">IP of the server to connect to.</param>
     /// <returns><see langword="true"/> if the player has successfully connected.</returns>
     /// <remarks>This will disable <see cref="IScriptOption.AutoRelogin"/>, try to log in and then enable it again.</remarks>
     bool ReloginIP(string ip);
@@ -161,6 +161,7 @@ public interface IScriptServers : INotifyPropertyChanged
     /// Tries to relogin for the number of <see cref="IScriptOption.ReloginTries"/>.
     /// </summary>
     /// <param name="serverName">Name of the server to connect to.</param>
+    /// <param name="token">Cancellation token to cancel the operation.</param>
     /// <returns><see langword="true"/> if the re-login was successful</returns>
     /// <remarks>This is mainly used for auto re-login. If you plan in using this, do a <see cref="Logout"/> first.</remarks>
     Task<bool> EnsureRelogin(string serverName, CancellationToken token);

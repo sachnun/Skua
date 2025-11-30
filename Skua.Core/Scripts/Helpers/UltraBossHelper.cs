@@ -10,6 +10,7 @@ namespace Skua.Core.Scripts.Helpers;
 /// <summary>
 /// Helper for managing ultra boss mechanics
 /// </summary>
+#pragma warning disable CS0414 // Field is assigned but never used
 public class UltraBossHelper : IUltraBossHelper, IDisposable
 {
     private readonly IMessenger _messenger;

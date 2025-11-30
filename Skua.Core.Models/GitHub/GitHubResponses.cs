@@ -1,17 +1,17 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Skua.Core.Models.GitHub;
 
 public class DeviceCodeResponse
 {
     [JsonProperty("device_code")]
-    public string DeviceCode { get; set; }
+    public string DeviceCode { get; set; } = string.Empty;
 
     [JsonProperty("user_code")]
-    public string UserCode { get; set; }
+    public string UserCode { get; set; } = string.Empty;
 
     [JsonProperty("verification_uri")]
-    public string VerificationUri { get; set; }
+    public string VerificationUri { get; set; } = string.Empty;
 
     [JsonProperty("expires_in")]
     public int ExpireTime { get; set; }
@@ -23,11 +23,11 @@ public class DeviceCodeResponse
 public class TokenResponse
 {
     [JsonProperty("access_token")]
-    public string AccessToken { get; set; }
+    public string AccessToken { get; set; } = string.Empty;
 
     [JsonProperty("token_type")]
-    public string TokenType { get; set; }
+    public string TokenType { get; set; } = string.Empty;
 
     [JsonProperty("scope")]
-    public string Scope { get; set; }
+    public string Scope { get; set; } = string.Empty;
 }

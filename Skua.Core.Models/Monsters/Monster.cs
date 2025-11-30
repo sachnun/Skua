@@ -12,7 +12,7 @@ public class Monster
     /// The name of the monster.
     /// </summary>
     [JsonProperty("strMonName")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The global ID of the monster.
@@ -24,13 +24,13 @@ public class Monster
     /// The race of the monster.
     /// </summary>
     [JsonProperty("sRace")]
-    public string Race { get; set; }
+    public string Race { get; set; } = string.Empty;
 
     /// <summary>
     /// The cell the monster is in.
     /// </summary>
     [JsonProperty("strFrame")]
-    public string Cell { get; set; }
+    public string Cell { get; set; } = string.Empty;
 
     /// <summary>
     /// The map ID of the monster.
@@ -60,7 +60,7 @@ public class Monster
     /// The SWF file name of the monster.
     /// </summary>
     [JsonProperty("strMonFileName")]
-    public string FileName { get; set; }
+    public string FileName { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates if this monster is alive.

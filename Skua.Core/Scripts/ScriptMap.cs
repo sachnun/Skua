@@ -9,6 +9,7 @@ using System.Diagnostics;
 
 namespace Skua.Core.Scripts;
 
+#pragma warning disable CS0169 // Field is never used
 public partial class ScriptMap : IScriptMap
 {
     public ScriptMap(
@@ -79,7 +80,7 @@ public partial class ScriptMap : IScriptMap
                           && Flash.IsNull("mcConnDetail.stage");
 
     [ObjectBinding("world.map.currentScene.labels", Select = "name", Default = "new()")]
-    private List<string> _cells;
+    private List<string> _cells = new();
 
     [MethodCallBinding("jumpCorrectRoom", RunMethodPost = true)]
     private void _jump(string cell, string pad, bool autoCorrect = true, bool clientOnly = false)
@@ -219,7 +220,7 @@ public partial class ScriptMap : IScriptMap
                     switch (mapItemLine.Contains("getmapitem"))
                     {
                         case true:
-                            questID = MainTimelineText.Skip(index - 5 < 0 ? 0 : index - 5).Take(10).FirstOrDefault(l => l.Contains("isquestinprogress"))!;
+                            questID = MainTimelineText.Skip(index - 5 < 0 ? 0 : index - 5).Take(10).FirstOrDefault(l => l.Contains("isquestinprogress")) ?? string.Empty;
 
                             questID = questID.ToLower().Split("isquestinprogress")[1].Split(')')[0].RemoveLetters() ?? "";
 
@@ -227,7 +228,7 @@ public partial class ScriptMap : IScriptMap
                             break;
 
                         case false:
-                            questID = MainTimelineText.Skip(index - 5 < 0 ? 0 : index - 5).Take(10).FirstOrDefault(l => l.Contains("questnum") || (l.Contains("intquest") && !l.Contains("intquestval")))!;
+                            questID = MainTimelineText.Skip(index - 5 < 0 ? 0 : index - 5).Take(10).FirstOrDefault(l => l.Contains("questnum") || (l.Contains("intquest") && !l.Contains("intquestval"))) ?? string.Empty;
 
                             questID = questID.Split('=')[1].RemoveLetters() ?? "";
 
@@ -265,7 +266,7 @@ public partial class ScriptMap : IScriptMap
 
                 if (linesToParse.Count > 0)
                 {
-                    foreach ((string mapItem, string questId) in linesToParse.PairUp())
+                    foreach ((string mapItem, string? questId) in linesToParse.PairUp())
                     {
                         if (string.IsNullOrEmpty(mapItem) || string.IsNullOrEmpty(questId))
                             continue;

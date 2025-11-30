@@ -336,7 +336,7 @@ public class UnifiedSettingsService
 
         if (value is System.Collections.Specialized.StringCollection syssc)
         {
-            foreach (string item in syssc)
+            foreach (string? item in syssc)
                 collection.Add(item);
             return collection;
         }

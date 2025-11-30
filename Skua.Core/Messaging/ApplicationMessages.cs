@@ -1,3 +1,4 @@
-﻿namespace Skua.Core.Messaging;
+namespace Skua.Core.Messaging;
 public sealed record ShowMainWindowMessage();
 public sealed record HideBalloonTipMessage();
+public sealed record ToggleScriptRepoMessage(bool? Show = null);

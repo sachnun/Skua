@@ -1,4 +1,4 @@
-﻿using Skua.Core.Models;
+using Skua.Core.Models;
 using Skua.Core.Models.Monsters;
 
 namespace Skua.Core.Interfaces;
@@ -39,6 +39,7 @@ public interface IScriptHunt
     /// Looks for the monster with specified id in the current map and kills it. This method disregards ScriptOptions#HuntPriority.
     /// </summary>
     /// <param name="id">The id of the enemy to hunt.</param>
+    /// <param name="token">A cancellation token.</param>
     void Monster(int id, CancellationToken? token);
 
     /// <summary>

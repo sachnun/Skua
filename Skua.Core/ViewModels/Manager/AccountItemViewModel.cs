@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Skua.Core.Messaging;
@@ -8,13 +8,13 @@ namespace Skua.Core.ViewModels;
 public partial class AccountItemViewModel : ObservableObject
 {
     [ObservableProperty]
-    private string _displayName;
+    private string _displayName = string.Empty;
 
     [ObservableProperty]
-    private string _username;
+    private string _username = string.Empty;
 
     [ObservableProperty]
-    private string _password;
+    private string _password = string.Empty;
 
     private bool _useCheck;
 

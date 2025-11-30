@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Skua.Core.Models.Factions;
 
@@ -14,7 +14,7 @@ public class Faction
     /// The in-game name of the faction.
     /// </summary>
     [JsonProperty("sName")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The rank that the player has achieved in this faction.

@@ -146,7 +146,8 @@ public partial class LauncherViewModel : BotControlViewModelBase, IDisposable
             {
                 // Stop and dispose timer
                 _timer?.Stop();
-                _timer.Elapsed -= RemoveStoppedCurrentProcess!;
+                if (_timer != null)
+                    _timer.Elapsed -= RemoveStoppedCurrentProcess!;
                 _timer?.Dispose();
 
                 // Unregister from messenger

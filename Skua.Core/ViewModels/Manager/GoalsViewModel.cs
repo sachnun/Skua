@@ -23,7 +23,7 @@ public class GoalsViewModel : BotControlViewModelBase
     protected override void OnActivated()
     {
         if (Goals.Count == 0)
-            GetGoals();
+            _ = GetGoals();
     }
 
     private async Task GetGoals()

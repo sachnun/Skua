@@ -388,11 +388,11 @@ public class ScriptInterface : IScriptInterface, IScriptInterfaceManager, IDispo
                 break;
 
             case "debug":
-                Trace.WriteLine(args[0]);
+                Trace.WriteLine(args![0]);
                 break;
 
             case "pext":
-                dynamic packet = JsonConvert.DeserializeObject<dynamic>((string)args[0])!;
+                dynamic packet = JsonConvert.DeserializeObject<dynamic>((string)args![0])!;
                 string type = packet["params"].type;
                 dynamic data = packet["params"].dataObj;
                 if (type is not null and "json")
@@ -553,7 +553,7 @@ public class ScriptInterface : IScriptInterface, IScriptInterfaceManager, IDispo
                 break;
 
             case "packet":
-                string[] parts = ((string)args[0]).Split('%', StringSplitOptions.RemoveEmptyEntries);
+                string[] parts = ((string)args![0]).Split('%', StringSplitOptions.RemoveEmptyEntries);
                 switch (parts[2])
                 {
                     case "moveToCell":
@@ -680,7 +680,7 @@ public class ScriptInterface : IScriptInterface, IScriptInterfaceManager, IDispo
                 // Clear the static instance reference
                 if (IScriptInterface.Instance == this)
                 {
-                    IScriptInterface.Instance = null;
+                    IScriptInterface.Instance = null!;
                 }
             }
 

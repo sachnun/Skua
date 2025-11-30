@@ -386,10 +386,10 @@ public partial class CBOClassSelectViewModel : ObservableObject, IManageCBOption
 
     public StringBuilder Save(StringBuilder builder)
     {
-        string soloClass = SelectedSoloClass == CurrentClassOption ? CurrentClassOption : SelectedSoloClass;
-        string farmClass = SelectedFarmClass == CurrentClassOption ? CurrentClassOption : SelectedFarmClass;
-        string dodgeClass = SelectedDodgeClass == CurrentClassOption ? CurrentClassOption : SelectedDodgeClass;
-        string bossClass = SelectedBossClass == CurrentClassOption ? CurrentClassOption : SelectedBossClass;
+        string? soloClass = SelectedSoloClass == CurrentClassOption ? CurrentClassOption : SelectedSoloClass;
+        string? farmClass = SelectedFarmClass == CurrentClassOption ? CurrentClassOption : SelectedFarmClass;
+        string? dodgeClass = SelectedDodgeClass == CurrentClassOption ? CurrentClassOption : SelectedDodgeClass;
+        string? bossClass = SelectedBossClass == CurrentClassOption ? CurrentClassOption : SelectedBossClass;
         
         builder.AppendLine($"SoloClassSelect: {soloClass}");
         builder.AppendLine($"SoloEquipCheck: {UseSoloEquipment}");

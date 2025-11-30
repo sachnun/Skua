@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Skua.Core.Models.Items;
 using System.Diagnostics.CodeAnalysis;
 
@@ -28,7 +28,7 @@ public class QuestData : IEqualityComparer<QuestData>
     /// The name of the quest.
     /// </summary>
     [JsonProperty("Name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Whether this quest can only be completed once.
@@ -40,7 +40,7 @@ public class QuestData : IEqualityComparer<QuestData>
     /// The field of the quest.
     /// </summary>
     [JsonProperty("Field")]
-    public string Field { get; set; }
+    public string Field { get; set; } = string.Empty;
 
     /// <summary>
     /// The index of the quest.
@@ -122,7 +122,9 @@ public class QuestData : IEqualityComparer<QuestData>
 
     public bool Equals(QuestData? x, QuestData? y)
     {
-        return (x is null && y is null) || ((x is not null || y is null) && (x is null || y is not null) && x.ID == y.ID);
+        if (x is null && y is null) return true;
+        if (x is null || y is null) return false;
+        return x.ID == y.ID;
     }
 
     public override bool Equals(object? obj)

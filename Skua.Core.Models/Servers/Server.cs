@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Skua.Core.Models.Converters;
 
 namespace Skua.Core.Models.Servers;
@@ -12,13 +12,13 @@ public class Server
     /// The name of the game server.
     /// </summary>
     [JsonProperty("sName")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The IP address of the game server.
     /// </summary>
     [JsonProperty("sIP")]
-    public string IP { get; set; }
+    public string IP { get; set; } = string.Empty;
 
     /// <summary>
     /// The chat level of this server (canned = 0, free = 2).
@@ -43,7 +43,7 @@ public class Server
     /// The language of this server (en/pt).
     /// </summary>
     [JsonProperty("sLang")]
-    public string Lang { get; set; }
+    public string Lang { get; set; } = string.Empty;
 
     /// <summary>
     /// The number of players currently on the server.

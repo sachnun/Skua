@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Skua.Core.Interfaces;
@@ -52,10 +52,7 @@ public partial class ScriptLoaderViewModel : BotControlViewModelBase
     private bool _toggleScriptEnabled = true;
 
     [ObservableProperty]
-    private string _scriptStatus = "[No Script Loaded]";
-
-    [ObservableProperty]
-    private string _loadedScript = string.Empty;
+    private string _loadedScript = "No script loaded";
 
     [RelayCommand]
     private void OpenBrowserForm()
@@ -66,7 +63,8 @@ public partial class ScriptLoaderViewModel : BotControlViewModelBase
     [RelayCommand]
     private void OpenScriptRepo()
     {
-        _windowService.ShowManagedWindow("Script Repo");
+        // Toggle - send message to toggle visibility
+        StrongReferenceMessenger.Default.Send(new ToggleScriptRepoMessage());
     }
 
     [RelayCommand]
@@ -75,12 +73,14 @@ public partial class ScriptLoaderViewModel : BotControlViewModelBase
         _processService.OpenVSC();
     }
 
-    private async Task StartScriptAsync(string? path = null)
+    private async Task StartScriptAsync(string? path = null, string? name = null)
     {
         if (string.IsNullOrWhiteSpace(path))
             return;
 
         ScriptManager.SetLoadedScript(path);
+        if (!string.IsNullOrWhiteSpace(name))
+            LoadedScript = name;
 
         if (ScriptManager.ScriptRunning)
             await ScriptManager.StopScriptAsync();
@@ -110,34 +110,34 @@ public partial class ScriptLoaderViewModel : BotControlViewModelBase
 
     private async Task StartScript()
     {
-        ScriptStatus = "Compiling...";
         await Task.Run(async () =>
         {
             Exception? ex = await ScriptManager.StartScriptAsync();
             if (ex is not null)
             {
                 _dialogService.ShowMessageBox($"Error while starting script:\r\n{ex.Message}", "Script Error");
-                ScriptStatus = "[Error]";
                 ScriptErrorToolTip = $"Error while starting script:\r\n{ex}";
                 ToggleScriptEnabled = true;
             }
-            ScriptStatus = "[Running]";
         });
     }
 
     [RelayCommand]
-    private void LoadScript(string? path = null)
+    private void LoadScript()
     {
-        if (string.IsNullOrWhiteSpace(path))
-        {
-            path = _fileDialog.OpenFile(_scriptPath, "Skua Scripts (*.cs)|*.cs");
-            if (path is null)
-                return;
-        }
+        string? path = _fileDialog.OpenFile(_scriptPath, "Skua Scripts (*.cs)|*.cs");
+        if (path is null)
+            return;
+        string name = Path.GetFileNameWithoutExtension(path) ?? "Unknown";
 
         ScriptManager.SetLoadedScript(path);
-        LoadedScript = Path.GetFileName(path) ?? string.Empty;
-        ScriptStatus = "[Script loaded]";
+        LoadedScript = name;
+    }
+
+    private void LoadScript(string path, string? name)
+    {
+        ScriptManager.SetLoadedScript(path);
+        LoadedScript = name ?? Path.GetFileNameWithoutExtension(path) ?? "Unknown";
     }
 
     [RelayCommand]
@@ -186,21 +186,21 @@ public partial class ScriptLoaderViewModel : BotControlViewModelBase
 
     private async void StartScript(ScriptLoaderViewModel recipient, StartScriptMessage message)
     {
-        var startNew = false;
-        var msgPathFileName = Path.GetFileName(message.Path) ?? string.Empty;
-        var runningScriptMessage = $"Script {LoadedScript} is already running. Do you want to stop it?";
+        string msgScriptName = message.Name ?? Path.GetFileNameWithoutExtension(message.Path) ?? "Unknown";
+        string runningScriptMessage = $"Script {LoadedScript} is already running. Do you want to stop it?";
+        bool startNew = false;
 
         ToggleScriptEnabled = false;
 
         if (ScriptManager.ScriptRunning)
         {
-            if (Path.GetFileName(ScriptManager.LoadedScript) != msgPathFileName)
+            if (Path.GetFileName(ScriptManager.LoadedScript) != Path.GetFileName(message.Path))
             {
-                runningScriptMessage = $"{LoadedScript} is running. Do you want to stop it and start {msgPathFileName}?";
+                runningScriptMessage = $"{LoadedScript} is running. Do you want to stop it and start {msgScriptName}?";
                 startNew = true;
             }
 
-            var dialogResult = _dialogService.ShowMessageBox(runningScriptMessage, "Script Error", "No", "Yes");
+            DialogResult dialogResult = _dialogService.ShowMessageBox(runningScriptMessage, "Script Running", "No", "Yes");
 
             if (dialogResult.Text == "Yes")
             {
@@ -209,9 +209,9 @@ public partial class ScriptLoaderViewModel : BotControlViewModelBase
 
                 if (startNew)
                 {
-                    LoadedScript = Path.GetFileName(message.Path) ?? string.Empty;
+                    LoadedScript = msgScriptName;
                     await Task.Delay(5000);
-                    await recipient.StartScriptAsync(message.Path);
+                    await recipient.StartScriptAsync(message.Path, message.Name);
                 }
             }
 
@@ -220,10 +220,10 @@ public partial class ScriptLoaderViewModel : BotControlViewModelBase
         }
         else
         {
-            LoadedScript = Path.GetFileName(message.Path) ?? string.Empty;
+            LoadedScript = msgScriptName;
         }
 
-        await recipient.StartScriptAsync(message.Path);
+        await recipient.StartScriptAsync(message.Path, message.Name);
     }
 
     private void EditScript(ScriptLoaderViewModel recipient, EditScriptMessage message)
@@ -233,19 +233,18 @@ public partial class ScriptLoaderViewModel : BotControlViewModelBase
 
     private void LoadScript(ScriptLoaderViewModel recipient, LoadScriptMessage message)
     {
-        recipient.LoadScript(message.Path);
+        if (!string.IsNullOrWhiteSpace(message.Path))
+            recipient.LoadScript(message.Path, message.Name);
     }
 
     private void ScriptStopping(ScriptLoaderViewModel recipient, ScriptStoppingMessage message)
     {
         recipient.ToggleScriptEnabled = false;
-        recipient.ScriptStatus = "Stopping...";
     }
 
     private void ScriptStopped(ScriptLoaderViewModel recipient, ScriptStoppedMessage message)
     {
         recipient.ToggleScriptEnabled = true;
-        recipient.ScriptStatus = "[Stopped]";
     }
 
     private void ScriptStarted(ScriptLoaderViewModel recipient, ScriptStartedMessage message)

@@ -33,7 +33,7 @@ public class StringCollectionJsonConverter : JsonConverter<System.Collections.Sp
     public override void Write(Utf8JsonWriter writer, System.Collections.Specialized.StringCollection value, JsonSerializerOptions options)
     {
         writer.WriteStartArray();
-        foreach (string item in value)
+        foreach (string? item in value)
         {
             writer.WriteStringValue(item);
         }

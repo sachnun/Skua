@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Skua.Core.GameProxy;
@@ -108,7 +108,6 @@ public static class Services
         services.AddTransient<BotWindowViewModel>();
         services.AddSingleton<IEnumerable<BotControlViewModelBase>>(s => new List<BotControlViewModelBase>()
         {
-            s.GetRequiredService<ScriptLoaderViewModel>(),
             s.GetRequiredService<ScriptRepoViewModel>(),
             s.GetRequiredService<LogsViewModel>(),
             s.GetRequiredService<AutoViewModel>(),

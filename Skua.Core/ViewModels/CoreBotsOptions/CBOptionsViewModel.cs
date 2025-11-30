@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Skua.Core.Interfaces;
 using System.Text;
 
@@ -25,13 +25,13 @@ public class CBOptionsViewModel : ObservableObject, IManageCBOptions
     {
         foreach (DisplayOptionItemViewModelBase option in Options)
         {
-            if (option.Tag == "PrivateRooms" && !(bool)option.Value && _dialogService.ShowMessageBox("Whilst we do offer the option, we highly recommend staying in private rooms while botting. Bot in public at your own risk.\r\n Confirm the use of Public Rooms?", "Public Room Warning", true) == false)
+            if (option.Tag == "PrivateRooms" && option.Value is bool boolValue && !boolValue && _dialogService.ShowMessageBox("Whilst we do offer the option, we highly recommend staying in private rooms while botting. Bot in public at your own risk.\r\n Confirm the use of Public Rooms?", "Public Room Warning", true) == false)
             {
                 builder.AppendLine($"{option.Tag}: {true}");
                 continue;
             }
 
-            if (option.Tag == "PrivateRoomNr" && long.TryParse(option.Value?.ToString(), out long room) && room > int.MaxValue)
+            if (option.Tag == "PrivateRoomNr" && long.TryParse(option.Value?.ToString(), out long room) && room > (long)int.MaxValue)
             {
                 if (_dialogService.ShowMessageBox($"Private room number cannot be greater than {int.MaxValue}. It will be reset to 100000.", "Room Number Warning", true) == false)
                 {

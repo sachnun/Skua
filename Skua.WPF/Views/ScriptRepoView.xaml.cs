@@ -1,8 +1,12 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Messaging;
+using Skua.Core.Messaging;
 using Skua.Core.ViewModels;
 using System;
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -13,119 +17,122 @@ namespace Skua.WPF.Views;
 /// </summary>
 public partial class ScriptRepoView : UserControl
 {
-    private readonly ICollectionView _collectionView;
+    private ICollectionView? _collectionView;
+    private CancellationTokenSource? _searchCts;
+    private string _lastSearchText = string.Empty;
 
     public ScriptRepoView()
     {
         InitializeComponent();
-        DataContext = Ioc.Default.GetRequiredService<ScriptRepoViewModel>();
-        _collectionView = CollectionViewSource.GetDefaultView(((ScriptRepoViewModel)DataContext).Scripts);
+        
+        Loaded += ScriptRepoView_Loaded;
+        IsVisibleChanged += ScriptRepoView_IsVisibleChanged;
+        Unloaded += (s, e) => StrongReferenceMessenger.Default.UnregisterAll(this);
+    }
+
+    private void ScriptRepoView_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (e.NewValue is true && DataContext is ScriptRepoViewModel vm)
+        {
+            vm.Initialize();
+        }
+    }
+
+    private void ScriptRepoView_Loaded(object sender, RoutedEventArgs e)
+    {
+        // Only set DataContext if not already set (allows parent to set it)
+        if (DataContext is not ScriptRepoViewModel)
+        {
+            DataContext = Ioc.Default.GetRequiredService<ScriptRepoViewModel>();
+        }
+        
+        if (DataContext is ScriptRepoViewModel vm)
+        {
+            _collectionView = CollectionViewSource.GetDefaultView(vm.Scripts);
+            
+            // Initialize/load scripts
+            vm.Initialize();
+        }
+        
+        // Register for close message (only once)
+        if (!StrongReferenceMessenger.Default.IsRegistered<CloseScriptRepoMessage>(this))
+        {
+            StrongReferenceMessenger.Default.Register<CloseScriptRepoMessage>(this, (r, m) =>
+            {
+                Dispatcher.Invoke(() =>
+                {
+                    // Try to close window if in window mode, otherwise send toggle message
+                    Window? window = Window.GetWindow(this);
+                    if (window is not null && window.GetType().Name != "MainWindow")
+                    {
+                        window.Close();
+                    }
+                    else
+                    {
+                        // We're embedded in MainWindow, send message to hide
+                        StrongReferenceMessenger.Default.Send(new ToggleScriptRepoMessage(false));
+                    }
+                });
+            });
+        }
     }
 
     private bool Search(object obj)
     {
-        var flag = false;
-        var searchScript = SearchBox.Text.ToLower();
+        string searchScript = _lastSearchText;
         if (string.IsNullOrWhiteSpace(searchScript))
             return true;
 
-        var script = (ScriptInfoViewModel)obj;
+        ScriptInfoViewModel? script = obj as ScriptInfoViewModel;
         if (script is null)
             return false;
 
-        var scriptName = script.Info.Name.ToLower();
-        if (KMPSearch(scriptName, searchScript))
-            flag = true;
+        // Simple contains check - faster than KMP for short strings
+        string scriptName = script.Info.Name;
+        if (scriptName.Contains(searchScript, StringComparison.OrdinalIgnoreCase))
+            return true;
 
-        foreach (var tag in script.InfoTags)
+        // Check tags
+        foreach (string tag in script.InfoTags)
         {
-            if (KMPSearch(tag, searchScript))
-            {
-                flag = true;
-                break;
-            }
+            if (tag.Contains(searchScript, StringComparison.OrdinalIgnoreCase))
+                return true;
         }
 
-        return flag;
+        return false;
     }
 
     private async void TextBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        await Task.Run(async () =>
+        // Cancel previous search
+        _searchCts?.Cancel();
+        _searchCts = new CancellationTokenSource();
+        CancellationToken token = _searchCts.Token;
+
+        string searchText = SearchBox.Text.Trim().ToLowerInvariant();
+        
+        // Debounce - wait 200ms before searching
+        try
         {
-            await Dispatcher.BeginInvoke(new Action(() =>
+            await Task.Delay(200, token);
+        }
+        catch (TaskCanceledException)
+        {
+            return;
+        }
+
+        if (token.IsCancellationRequested)
+            return;
+
+        _lastSearchText = searchText;
+
+        // Apply filter on UI thread
+        Dispatcher.Invoke(() =>
+        {
+            if (_collectionView is not null)
             {
                 _collectionView.Filter = Search;
-                _collectionView.Refresh();
-            }));
+            }
         });
-    }
-
-    private bool KMPSearch(string text, string pattern)
-    {
-        int n = text.Length;
-        int m = pattern.Length;
-        int[] lps = new int[m];
-        int j = 0; // index for pattern[]
-
-        // Preprocess the pattern (calculate lps[] array)
-        ComputeLPSArray(pattern, m, lps);
-
-        int i = 0;  // index for text[]
-        while (i < n)
-        {
-            if (pattern[j] == text[i])
-            {
-                j++;
-                i++;
-            }
-
-            if (j == m)
-                return true;
-
-            // mismatch after j matches
-            else if (i < n && pattern[j] != text[i])
-            {
-                // Do not match lps[0..lps[j-1]] characters,
-                // they will match anyway
-                if (j != 0)
-                    j = lps[j - 1];
-                else
-                    i = i + 1;
-            }
-        }
-        return false;
-    }
-
-    private void ComputeLPSArray(string pattern, int m, int[] lps)
-    {
-        int len = 0;
-        int i = 1;
-        lps[0] = 0; // lps[0] is always 0
-
-        // the loop calculates lps[i] for i = 1 to m-1
-        while (i < m)
-        {
-            if (pattern[i] == pattern[len])
-            {
-                len++;
-                lps[i] = len;
-                i++;
-            }
-            else // (pat[i] != pat[len])
-            {
-                if (len != 0)
-                {
-                    len = lps[len - 1];
-
-                    // Also, note that we do not increment i here
-                }
-                else  // if (len == 0)
-                {
-                    lps[i] = 0;
-                    i++;
-                }
-            }
-        }
     }
 }

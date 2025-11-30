@@ -6,6 +6,7 @@ using System.Dynamic;
 
 namespace Skua.Core.Scripts;
 
+#pragma warning disable CS0169 // Field is never used
 public partial class ScriptInventory : IScriptInventory
 {
     private readonly Lazy<IFlashUtil> _lazyFlash;
@@ -42,7 +43,7 @@ public partial class ScriptInventory : IScriptInventory
     }
 
     [ObjectBinding("world.myAvatar.items", Default = "new()")]
-    private List<InventoryItem> _items;
+    private List<InventoryItem> _items = new();
 
     [ObjectBinding("world.myAvatar.objData.iBagSlots")]
     private int _slots;

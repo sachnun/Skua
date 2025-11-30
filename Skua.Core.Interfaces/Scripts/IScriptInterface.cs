@@ -1,4 +1,4 @@
-﻿using Skua.Core.Interfaces.Services;
+using Skua.Core.Interfaces.Services;
 using Skua.Core.Models;
 
 namespace Skua.Core.Interfaces;
@@ -37,7 +37,7 @@ public interface IScriptInterface
     /// <summary>
     /// Static instance of the current <see cref="IScriptInterface"/>.
     /// </summary>
-    static IScriptInterface Instance { get; protected set; }
+    static IScriptInterface Instance { get; protected set; } = default!;
 
     /// <summary>
     /// Class for Flash operations.

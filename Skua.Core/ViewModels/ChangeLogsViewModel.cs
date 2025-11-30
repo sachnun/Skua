@@ -6,6 +6,7 @@ using static Skua.Core.Utils.ValidatedHttpExtensions;
 
 namespace Skua.Core.ViewModels;
 
+#pragma warning disable CS0414 // Field is assigned but never used
 public class ChangeLogsViewModel : BotControlViewModelBase
 {
     private string _markDownContent = "Loading content...";
@@ -45,7 +46,7 @@ public class ChangeLogsViewModel : BotControlViewModelBase
         await GetChangeLogsContent();
     }
 
-    public async void OnActivated()
+    public new async void OnActivated()
     {
         MarkdownDoc = "Loading changelog...";
         await GetChangeLogsContent();

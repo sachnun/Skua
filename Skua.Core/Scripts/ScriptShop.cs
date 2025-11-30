@@ -9,6 +9,7 @@ using System.Xml.Linq;
 
 namespace Skua.Core.Scripts;
 
+#pragma warning disable CS0169 // Field is never used
 public partial class ScriptShop : IScriptShop
 {
     public ScriptShop(

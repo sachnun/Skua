@@ -15,7 +15,7 @@ public class AboutViewModel : BotControlViewModelBase
 
         Task.Run(async () => await GetAboutContent());
 
-        NavigateCommand = new RelayCommand<string>(url => Process.Start(new ProcessStartInfo(url) { UseShellExecute = true }));
+        NavigateCommand = new RelayCommand<string>(url => Process.Start(new ProcessStartInfo(url!) { UseShellExecute = true }));
     }
 
     public string MarkdownDoc

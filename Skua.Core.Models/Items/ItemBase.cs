@@ -16,13 +16,13 @@ public class ItemBase
     /// </summary>
     [JsonProperty("sName")]
     [JsonConverter(typeof(TrimConverter))]
-    public virtual string Name { get; set; }
+    public virtual string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The description of the item.
     /// </summary>
     [JsonProperty("sDesc")]
-    public virtual string Description { get; set; }
+    public virtual string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// The quantity of the item in this stack.
@@ -61,7 +61,7 @@ public class ItemBase
     /// The category of the item.
     /// </summary>
     [JsonProperty("sType")]
-    public virtual string CategoryString { get; set; }
+    public virtual string CategoryString { get; set; } = string.Empty;
 
     /// <summary>
     /// The enhancement pattern ID of the item. This identifies the current enhancement type of the item.
@@ -134,25 +134,25 @@ public class ItemBase
     /// The group of the item. co = Armor; ba = Cape; he = Helm; pe = Pet; Weapon = Weapon.
     /// </summary>
     [JsonProperty("sES")]
-    public virtual string ItemGroup { get; set; }
+    public virtual string ItemGroup { get; set; } = string.Empty;
 
     /// <summary>
     /// The name of the source file of the item.
     /// </summary>
     [JsonProperty("sLink")]
-    public virtual string FileName { get; set; }
+    public virtual string FileName { get; set; } = string.Empty;
 
     /// <summary>
     /// The link to the source file of the item.
     /// </summary>
     [JsonProperty("sFile")]
-    public virtual string FileLink { get; set; }
+    public virtual string FileLink { get; set; } = string.Empty;
 
     /// <summary>
     /// The meta value of the item. This is used to link buffs (xp boosts etc).
     /// </summary>
     [JsonProperty("sMeta")]
-    public virtual string Meta { get; set; }
+    public virtual string Meta { get; set; } = string.Empty;
 
     public override string ToString()
     {

@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Skua.Core.Interfaces;
@@ -65,7 +65,7 @@ public partial class AutoViewModel : BotControlViewModelBase, IDisposable
                 CurrentClassModes.AddRange(_advancedSkills.LoadedSkills.Where(s => s.ClassName == _selectedClassString).Select(s => s.ClassUseMode));
 
                 var classModes = _advancedSkills.GetAvailableClassModes();
-                if (classModes.TryGetValue(_selectedClassString, out var modes))
+                if (classModes.TryGetValue(_selectedClassString!, out var modes))
                 {
                     CurrentClassModeStrings = new List<string>(modes.OrderBy(x => x));
                 }
@@ -90,7 +90,7 @@ public partial class AutoViewModel : BotControlViewModelBase, IDisposable
     {
         try
         {
-            await Task.Run(() => _inventory.EquipItem(_selectedClassString)).ConfigureAwait(false);
+            await Task.Run(() => _inventory.EquipItem(_selectedClassString!)).ConfigureAwait(false);
         }
         catch (OperationCanceledException)
         {
@@ -120,7 +120,7 @@ public partial class AutoViewModel : BotControlViewModelBase, IDisposable
         if (string.IsNullOrEmpty(SelectedClassModeString))
             return;
 
-        var skill = _advancedSkills.GetClassModeSkills(_selectedClassString, SelectedClassModeString);
+        var skill = _advancedSkills.GetClassModeSkills(_selectedClassString!, SelectedClassModeString);
         if (skill != null)
         {
             SelectedClassMode = skill.ClassUseMode;

@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 
@@ -6,10 +6,11 @@ namespace Skua.Core.ViewModels;
 
 public partial class BotWindowViewModel : ObservableObject
 {
-    public BotWindowViewModel(IEnumerable<BotControlViewModelBase> views)
+    public BotWindowViewModel(IEnumerable<BotControlViewModelBase> views, ScriptLoaderViewModel scriptLoaderViewModel)
     {
         BotViews = new(views);
         _selectedItem = BotViews[0];
+        ScriptLoaderViewModel = scriptLoaderViewModel;
     }
 
     [ObservableProperty]
@@ -33,6 +34,8 @@ public partial class BotWindowViewModel : ObservableObject
     }
 
     public ObservableCollection<BotControlViewModelBase> BotViews { get; set; }
+    
+    public ScriptLoaderViewModel ScriptLoaderViewModel { get; }
 
     [RelayCommand]
     private void Home()

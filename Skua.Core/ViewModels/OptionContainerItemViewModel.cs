@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using Skua.Core.Interfaces;
 using Skua.Core.Options;
 
@@ -22,7 +22,7 @@ public partial class OptionContainerItemViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    private object _value;
+    private object _value = default!;
 
     [ObservableProperty]
     private List<string>? _enumValues;
@@ -33,7 +33,7 @@ public partial class OptionContainerItemViewModel : ObservableObject
     public IOptionContainer Container { get; }
     public IOption Option { get; }
     public Type Type { get; }
-    public string Category { get; }
+    public string Category { get; } = string.Empty;
 
     private object GetValue()
     {

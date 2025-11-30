@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -8,6 +8,7 @@
     <Platforms>AnyCPU;x64;x86</Platforms>
     <!-- Force AnyCPU for source generators to avoid architecture issues -->
     <PlatformTarget>AnyCPU</PlatformTarget>
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
   </PropertyGroup>
 
     <ItemGroup>

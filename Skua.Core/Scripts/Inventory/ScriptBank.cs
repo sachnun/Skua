@@ -6,6 +6,7 @@ using Skua.Core.Models.Items;
 
 namespace Skua.Core.Scripts;
 
+#pragma warning disable CS0169 // Field is never used
 public partial class ScriptBank : IScriptBank
 {
     public ScriptBank(
@@ -143,7 +144,7 @@ public partial class ScriptBank : IScriptBank
         if (!((IScriptBank)this).TryGetItem(name, out InventoryItem? item))
             return false;
         int i = 0;
-        while (!((IScriptBank)this).ToInventory(item) && !Manager.ShouldExit && Player.Playing && ++i < Options.MaximumTries)
+        while (!((IScriptBank)this).ToInventory(item!) && !Manager.ShouldExit && Player.Playing && ++i < Options.MaximumTries)
             Thread.Sleep(Options.ActionDelay);
 
         return Inventory.Contains(name);
@@ -156,7 +157,7 @@ public partial class ScriptBank : IScriptBank
         if (!((IScriptBank)this).TryGetItem(id, out InventoryItem? item))
             return false;
         int i = 0;
-        while (!((IScriptBank)this).ToInventory(item) && !Manager.ShouldExit && Player.Playing && ++i < Options.MaximumTries)
+        while (!((IScriptBank)this).ToInventory(item!) && !Manager.ShouldExit && Player.Playing && ++i < Options.MaximumTries)
             Thread.Sleep(Options.ActionDelay);
 
         return Inventory.Contains(id);

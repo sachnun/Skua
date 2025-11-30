@@ -1,4 +1,4 @@
-﻿using Skua.Core.Models.Items;
+using Skua.Core.Models.Items;
 using Skua.Core.Utils;
 
 namespace Skua.Core.Interfaces;
@@ -113,20 +113,20 @@ public interface ICheckInventory<T> : IItemContainer<T> where T : ItemBase
     }
 
     /// <summary>
-    /// Get the <see cref="T">item</see> with the specified <paramref name="name"/>.
+    /// Get the item with the specified <paramref name="name"/>.
     /// </summary>
-    /// <param name="name">Name of T item to get.</param>
-    /// <returns>The <see cref="T"/> with the specified <paramref name="name"/> or <see langword="null"/> if it doesn't exist.</returns>
+    /// <param name="name">Name of item to get.</param>
+    /// <returns>The item with the specified <paramref name="name"/> or <see langword="null"/> if it doesn't exist.</returns>
     T? GetItem(string name)
     {
         return Items?.Find(x => x.Name == name);
     }
 
     /// <summary>
-    /// Get the <see cref="T">item</see> with the specified <paramref name="id"/>.
+    /// Get the item with the specified <paramref name="id"/>.
     /// </summary>
     /// <param name="id">ID of the item to get.</param>
-    /// <returns>The <see cref="T"/> with the specified <paramref name="id"/> or <see langword="null"/> if it doesn't exist.</returns>
+    /// <returns>The item with the specified <paramref name="id"/> or <see langword="null"/> if it doesn't exist.</returns>
     T? GetItem(int id)
     {
         return Items?.Find(x => x.ID == id);

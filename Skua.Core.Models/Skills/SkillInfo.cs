@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Skua.Core.Models.Skills;
 
@@ -26,7 +26,7 @@ public class SkillInfo
     /// The icon key of the skill.
     /// </summary>
     [JsonProperty("icon")]
-    public string Icon { get; set; }
+    public string Icon { get; set; } = string.Empty;
 
     /// <summary>
     /// Indicates if the skill is an auto attack.
@@ -38,13 +38,13 @@ public class SkillInfo
     /// The name of the skill.
     /// </summary>
     [JsonProperty("nam")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The description of the skill.
     /// </summary>
     [JsonProperty("desc")]
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// The range of the skill.
@@ -68,7 +68,7 @@ public class SkillInfo
     /// The animation list of this skill as a string.
     /// </summary>
     [JsonProperty("anim")]
-    public string _Anim { get; set; }
+    public string _Anim { get; set; } = string.Empty;
 
     /// <summary>
     /// The animation list of this skill as an array.
@@ -79,7 +79,7 @@ public class SkillInfo
     /// The type of the skill.
     /// </summary>
     [JsonProperty("typ")]
-    public string Type { get; set; }
+    public string Type { get; set; } = string.Empty;
 
     /// <summary>
     /// The minimum number of targets this skill must be used on.

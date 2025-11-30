@@ -1,14 +1,14 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Skua.Core.Models.GitHub;
 
 public class GoalObject
 {
     [JsonProperty("title")]
-    public string Title { get; set; }
+    public string Title { get; set; } = string.Empty;
 
     [JsonProperty("desc")]
-    public string Description { get; set; }
+    public string Description { get; set; } = string.Empty;
 
     [JsonProperty("cur_value")]
     public int CurrentValue { get; set; }

@@ -1,6 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Skua.Core.Flash;
-using Skua.Core.Interfaces;
 using Skua.Core.Interfaces;
 using Skua.Core.Messaging;
 using Skua.Core.Models.Skills;
@@ -29,7 +28,8 @@ public partial class ScriptSkill : IScriptSkill
     private IScriptOption Options => _lazyOptions.Value;
     private IScriptInventory Inventory => _lazyInventory.Value;
 
-    public IAdvancedSkillContainer AdvancedSkillContainer { get; set; }
+    public IAdvancedSkillContainer AdvancedSkillContainer { get; set; } = default!;
+    public ISkillProvider BaseProvider { get; private set; } = default!;
 
     public ScriptSkill(
         IAdvancedSkillContainer advContainer,
@@ -64,7 +64,6 @@ public partial class ScriptSkill : IScriptSkill
     private bool _useSkill(int index) => false;
 
     public ISkillProvider? OverrideProvider { get; set; } = null;
-    public ISkillProvider BaseProvider { get; private set; }
     public bool TimerRunning { get; private set; } = false;
     public bool IsPaused { get; private set; } = false;
     public int SkillInterval { get; set; } = 100;

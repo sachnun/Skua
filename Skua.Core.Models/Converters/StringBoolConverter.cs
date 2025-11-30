@@ -1,17 +1,18 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Skua.Core.Models.Converters;
 
 public class StringBoolConverter : JsonConverter
 {
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
-        writer.WriteValue(((bool)value) ? "1" : "0");
+        writer.WriteValue((value is bool b && b) ? "1" : "0");
     }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
-        return reader.Value.ToString() == "1" || reader.Value.ToString() == "true";
+        string? val = reader.Value?.ToString();
+        return val == "1" || val == "true";
     }
 
     public override bool CanConvert(Type objectType)

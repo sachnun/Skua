@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Skua.Core.Interfaces;
@@ -17,11 +17,11 @@ public partial class HotKeyItemViewModel : ObservableObject, IHotKey
     public HotKeyItemViewModel()
     { }
 
-    public string Binding { get; set; }
+    public string Binding { get; set; } = string.Empty;
     public string Title { get; set; } = string.Empty;
 
     [ObservableProperty]
-    private string _keyGesture;
+    private string _keyGesture = string.Empty;
 
     [RelayCommand]
     private void EditHotKey()

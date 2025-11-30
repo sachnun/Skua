@@ -1,6 +1,7 @@
-﻿using Skua.Core.Interfaces;
+using Skua.Core.Interfaces;
+using Skua.Core.Models;
 
-namespace Skua.App.WPF.Follower;
+namespace Skua.App.WPF.Sync;
 
 public class SettingsService : ISettingsService
 {
@@ -17,6 +18,29 @@ public class SettingsService : ISettingsService
     }
 
     public void Set<T>(string key, T value)
+    {
+    }
+
+    public void Initialize(AppRole role)
+    {
+    }
+
+    public SharedSettings GetShared()
+    {
+        return new SharedSettings();
+    }
+
+    public ClientSettings GetClient()
+    {
+        return new ClientSettings();
+    }
+
+    public ManagerSettings GetManager()
+    {
+        return new ManagerSettings();
+    }
+
+    public void SetApplicationVersion(string version)
     {
     }
 }

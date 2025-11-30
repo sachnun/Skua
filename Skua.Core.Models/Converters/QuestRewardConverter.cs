@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Skua.Core.Models.Items;
 
 namespace Skua.Core.Models.Converters;
@@ -10,12 +10,12 @@ public class QuestRewardConverter : JsonConverter
         return objectType == typeof(List<ItemBase>);
     }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    public override object? ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
-        return serializer.Deserialize<Dictionary<string, Dictionary<int, ItemBase>>>(reader).Values.SelectMany(x => x.Values).ToList();
+        return serializer.Deserialize<Dictionary<string, Dictionary<int, ItemBase>>>(reader)?.Values.SelectMany(x => x.Values).ToList() ?? new List<ItemBase>();
     }
 
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
         serializer.Serialize(writer, value);
     }

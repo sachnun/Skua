@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using System.Text;
 
 namespace Skua.Core.ViewModels;
@@ -33,7 +33,7 @@ public class SkillItemViewModel : ObservableObject
     {
         Skill = int.Parse(skill.AsSpan(0, 1));
         string rest = skill[1..].Trim();
-        bool useRule = false, healthGreater = false, manaGreater = false, auraGreater = false, skip = false, multiAura = false;
+        bool useRule = false, healthGreater = false, manaGreater = false, auraGreater = false, skip = false;
         int waitVal = 0, healthVal = 0, manaVal = 0, auraTargetIndex = 0;
         float auraVal = 0;
         string auraName = string.Empty;

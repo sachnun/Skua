@@ -1,4 +1,4 @@
-﻿using Skua.Core.Models.Items;
+using Skua.Core.Models.Items;
 using Skua.Core.Models.Players;
 using Skua.Core.Utils;
 
@@ -92,6 +92,7 @@ public interface IScriptMap
     /// <param name="cell">Cell to be placed at.</param>
     /// <param name="pad">Pad to be placed at.</param>
     /// <param name="ignoreCheck">Whether to ignore if the player is in the specified map.</param>
+    /// <param name="autoCorrect">Whether to auto-correct the cell and pad values.</param>
     void Join(string map, string cell = "Enter", string pad = "Spawn", bool ignoreCheck = false, bool autoCorrect = true);
 
     /// <summary>

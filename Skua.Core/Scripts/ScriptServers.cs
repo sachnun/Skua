@@ -8,6 +8,7 @@ using static Skua.Core.Utils.ValidatedHttpExtensions;
 
 namespace Skua.Core.Scripts;
 
+#pragma warning disable CS0169 // Field is never used
 public partial class ScriptServers : ObservableRecipient, IScriptServers
 {
     public ScriptServers(
@@ -41,8 +42,8 @@ public partial class ScriptServers : ObservableRecipient, IScriptServers
     private IScriptManager Manager => _lazyManager.Value;
 
     private bool _loginInfoSetted = false;
-    private string _username;
-    private string _password;
+    private string _username = string.Empty;
+    private string _password = string.Empty;
 
     public string LastIP { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;

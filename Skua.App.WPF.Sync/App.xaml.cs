@@ -1,6 +1,5 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection;
-using Skua.App.WPF.Follower;
 using Skua.Core.AppStartup;
 using Skua.Core.Interfaces;
 using Skua.WPF.Services;

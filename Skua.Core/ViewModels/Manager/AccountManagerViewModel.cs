@@ -58,13 +58,13 @@ public sealed partial class AccountManagerViewModel : BotControlViewModelBase
     private int _selectedAccountQuant;
 
     [ObservableProperty]
-    private string _usernameInput;
+    private string _usernameInput = string.Empty;
 
     [ObservableProperty]
-    private string _displayNameInput;
+    private string _displayNameInput = string.Empty;
 
     [ObservableProperty]
-    private Server _selectedServer;
+    private Server _selectedServer = default!;
 
     [ObservableProperty]
     private bool _useNameAsDisplay;
@@ -76,7 +76,7 @@ public sealed partial class AccountManagerViewModel : BotControlViewModelBase
 
     private bool _syncThemes;
 
-    public string PasswordInput { private get; set; }
+    public string PasswordInput { private get; set; } = string.Empty;
 
     [RelayCommand]
     public void ChangeScriptPath()
@@ -185,7 +185,7 @@ public sealed partial class AccountManagerViewModel : BotControlViewModelBase
         _settingsService.Set("ManagedAccounts", accs);
     }
 
-    private void _LaunchAcc(string username, string password, string displayName = null)
+    private void _LaunchAcc(string username, string password, string? displayName = null)
     {
         try
         {

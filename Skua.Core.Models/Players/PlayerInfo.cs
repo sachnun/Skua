@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using Skua.Core.Models.Auras;
 
 namespace Skua.Core.Models.Players;
@@ -9,7 +9,7 @@ public class PlayerInfo
     /// The name of the player.
     /// </summary>
     [JsonProperty("uoName")]
-    public string Name { get; set; }
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// The player's current HP.
@@ -57,13 +57,13 @@ public class PlayerInfo
     /// The cell the player is currently in.
     /// </summary>
     [JsonProperty("strFrame")]
-    public string Cell { get; set; }
+    public string Cell { get; set; } = string.Empty;
 
     /// <summary>
     /// The pad the player is currently in.
     /// </summary>
     [JsonProperty("strPad")]
-    public string Pad { get; set; }
+    public string Pad { get; set; } = string.Empty;
 
     /// <summary>
     /// The player's X coordinate.

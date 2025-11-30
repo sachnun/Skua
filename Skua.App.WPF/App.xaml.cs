@@ -94,21 +94,24 @@ public sealed partial class App : Application
 
         IDialogService dialogService = Services.GetRequiredService<IDialogService>();
         IGetScriptsService getScripts = Services.GetRequiredService<IGetScriptsService>();
+        ILogService logService = Services.GetRequiredService<ILogService>();
+        
+        // Silent script update - no popup dialogs
         if (Services.GetRequiredService<ISettingsService>().Get<bool>("CheckBotScriptsUpdates"))
         {
             Task.Factory.StartNew(async () =>
             {
                 await getScripts.GetScriptsAsync(null, default);
 
-                if ((getScripts.Missing > 0 || getScripts.Outdated > 0)
-                    && (Services.GetRequiredService<ISettingsService>().Get<bool>("AutoUpdateBotScripts") || Services.GetRequiredService<IDialogService>().ShowMessageBox("Would you like to update your scripts?", "Script Update", true) == true))
+                if (getScripts.Missing > 0 || getScripts.Outdated > 0)
                 {
                     int count = await getScripts.DownloadAllWhereAsync(s => !s.Downloaded || s.Outdated);
-                    Services.GetRequiredService<IDialogService>().ShowMessageBox($"Downloaded {count} scripts.\r\nYou can disable auto script updates in Options > Application.", "Script Update");
+                    logService.ScriptLog($"[Auto-Update] Downloaded {count} scripts.");
                 }
             });
         }
 
+        // Silent AdvanceSkill Sets update - no popup dialogs
         if (Services.GetRequiredService<ISettingsService>().Get<bool>("CheckAdvanceSkillSetsUpdates"))
         {
             IAdvancedSkillContainer advanceSkillSets = Services.GetRequiredService<IAdvancedSkillContainer>();
@@ -117,21 +120,10 @@ public sealed partial class App : Application
                 long remoteSize = await getScripts.CheckAdvanceSkillSetsUpdates();
                 if (remoteSize > 0)
                 {
-                    if (Services.GetRequiredService<ISettingsService>().Get<bool>("AutoUpdateAdvanceSkillSetsUpdates") || Services.GetRequiredService<IDialogService>().ShowMessageBox("Would you like to update your AdvanceSkill Sets?", "AdvanceSkill Sets Update", true) == true)
+                    if (await getScripts.UpdateSkillSetsFile())
                     {
-                        if (await getScripts.UpdateSkillSetsFile())
-                        {
-                            if (Services.GetRequiredService<ISettingsService>().Get<bool>("AutoUpdateAdvanceSkillSetsUpdates"))
-                                Services.GetRequiredService<IDialogService>().ShowMessageBox($"AdvanceSkill Sets has been updated.\r\nYou can disable auto AdvanceSkill Sets updates in Options > Application.", "AdvanceSkill Sets Update");
-                            else
-                                Services.GetRequiredService<IDialogService>().ShowMessageBox($"AdvanceSkill Sets has been updated.\r\nYou can enable auto AdvanceSkill Sets updates in Options > Application.", "AdvanceSkill Sets Update");
-
-                            advanceSkillSets.SyncSkills();
-                        }
-                        else
-                        {
-                            Services.GetRequiredService<IDialogService>().ShowMessageBox($"AdvanceSkill Sets update error.\r\nYou can disable auto AdvanceSkill Sets updates in Options > Application.", "AdvanceSkill Sets Update");
-                        }
+                        advanceSkillSets.SyncSkills();
+                        logService.ScriptLog("[Auto-Update] AdvanceSkill Sets updated.");
                     }
                 }
             });

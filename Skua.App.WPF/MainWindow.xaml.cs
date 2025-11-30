@@ -1,4 +1,4 @@
-﻿using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using CommunityToolkit.Mvvm.Messaging;
 using Skua.Core.Interfaces;
 using Skua.Core.Messaging;
@@ -21,13 +21,41 @@ public partial class MainWindow : CustomWindow
     {
         InitializeComponent();
         DataContext = Ioc.Default.GetService<MainViewModel>();
+        ScriptLoaderPanel.DataContext = Ioc.Default.GetRequiredService<ScriptLoaderViewModel>();
         _player = Ioc.Default.GetRequiredService<IScriptPlayer>();
         _dispatcherService = Ioc.Default.GetRequiredService<IDispatcherService>();
         StrongReferenceMessenger.Default.Register<MainWindow, ShowMainWindowMessage>(this, ShowMainWindow);
         StrongReferenceMessenger.Default.Register<MainWindow, HideBalloonTipMessage>(this, HideBalloon);
+        StrongReferenceMessenger.Default.Register<MainWindow, ToggleScriptRepoMessage>(this, ToggleScriptRepo);
         StrongReferenceMessenger.Default.Register<MainWindow, ReloginTriggeredMessage, int>(this, (int)MessageChannels.GameEvents, NotifyRelogin);
         StrongReferenceMessenger.Default.Register<MainWindow, ScriptStoppedMessage, int>(this, (int)MessageChannels.ScriptStatus, NotifyScriptStopped);
         StrongReferenceMessenger.Default.Register<MainWindow, ScriptErrorMessage, int>(this, (int)MessageChannels.ScriptStatus, NotifyScriptError);
+    }
+
+    private void ToggleScriptRepo(MainWindow recipient, ToggleScriptRepoMessage message)
+    {
+        recipient._dispatcherService.Invoke(() =>
+        {
+            // If Show is null, toggle. Otherwise use the specified value.
+            bool show = message.Show ?? (recipient.ScriptRepoPanel.Visibility != Visibility.Visible);
+            
+            if (show)
+            {
+                recipient.GameContainer.Visibility = Visibility.Collapsed;
+                recipient.ScriptRepoPanel.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                recipient.ScriptRepoPanel.Visibility = Visibility.Collapsed;
+                recipient.GameContainer.Visibility = Visibility.Visible;
+            }
+        });
+    }
+
+    private void BackToGame_Click(object sender, RoutedEventArgs e)
+    {
+        ScriptRepoPanel.Visibility = Visibility.Collapsed;
+        GameContainer.Visibility = Visibility.Visible;
     }
 
     private void NotifyScriptError(MainWindow recipient, ScriptErrorMessage message)

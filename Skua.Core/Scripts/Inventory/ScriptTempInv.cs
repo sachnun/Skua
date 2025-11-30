@@ -4,6 +4,7 @@ using Skua.Core.Models.Items;
 
 namespace Skua.Core.Scripts;
 
+#pragma warning disable CS0169 // Field is never used
 public partial class ScriptTempInv : IScriptTempInv
 {
     private readonly Lazy<IFlashUtil> _lazyFlash;
@@ -15,5 +16,5 @@ public partial class ScriptTempInv : IScriptTempInv
     }
 
     [ObjectBinding("world.myAvatar.tempitems", Default = "new()")]
-    private List<ItemBase> _items;
+    private List<ItemBase> _items = new();
 }

@@ -1,4 +1,4 @@
-﻿namespace Skua.Core.Utils;
+namespace Skua.Core.Utils;
 
 public delegate void Consumer<T>(T arg);
 
@@ -34,7 +34,7 @@ public static class EnumerableExtensions
         return list;
     }
 
-    public static IEnumerable<Tuple<T, T>> PairUp<T>(this IEnumerable<T> list)
+    public static IEnumerable<Tuple<T, T?>> PairUp<T>(this IEnumerable<T> list)
     {
         using IEnumerator<T> iterator = list.GetEnumerator();
         while (iterator.MoveNext())

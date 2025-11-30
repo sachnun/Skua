@@ -1,4 +1,4 @@
-﻿using Skua.Core.Models.Items;
+using Skua.Core.Models.Items;
 
 namespace Skua.Core.Interfaces;
 
@@ -243,7 +243,7 @@ public interface IScriptEvent
     event ScriptStoppingHandler ScriptStopping;
 
     /// <summary>
-    /// Occurs when a safe zone packet is received (Ledgermayne mechanic). </br>
+    /// Occurs when a safe zone packet is received (Ledgermayne mechanic).
     /// A is the Left zone, B is the Right zone, and "" (empty string) resets the zones.
     /// </summary>
     event RunToAreaHandler RunToArea;

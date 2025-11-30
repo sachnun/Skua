@@ -5,5 +5,11 @@
     <AssemblyVersion>1.3.0.2</AssemblyVersion>
     <FileVersion>1.3.0.2</FileVersion>
     <Version>1.3.0.2</Version>
+    <!-- Suppress TFM support build warnings for NuGet packages targeting net8.0+ -->
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <!-- Suppress end-of-life target framework warning (net6.0-windows) -->
+    <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    <!-- Suppress missing XML comment warnings for source-generated code -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 </Project>

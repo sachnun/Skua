@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Skua.Core.Utils.CustomJsonConverters;
 
@@ -11,7 +11,7 @@ public class UnixDateTimeConverter : JsonConverter
         return objectType == typeof(DateTime);
     }
 
-    public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+    public override object ReadJson(JsonReader reader, Type objectType, object? existingValue, JsonSerializer serializer)
     {
         long t;
         if (reader.Value!.GetType() != typeof(long))
@@ -22,8 +22,8 @@ public class UnixDateTimeConverter : JsonConverter
         return _epoch.AddMilliseconds(t);
     }
 
-    public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+    public override void WriteJson(JsonWriter writer, object? value, JsonSerializer serializer)
     {
-        writer.WriteRawValue(((DateTime)value - _epoch).ToString());
+        writer.WriteRawValue(((DateTime)value! - _epoch).ToString());
     }
 }

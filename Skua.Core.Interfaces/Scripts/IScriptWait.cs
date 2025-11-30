@@ -1,4 +1,4 @@
-﻿using Skua.Core.Models;
+using Skua.Core.Models;
 
 namespace Skua.Core.Interfaces;
 
@@ -113,6 +113,7 @@ public interface IScriptWait
     /// <param name="function">Function to poll.</param>
     /// <param name="value">Value to wait for.</param>
     /// <param name="timeout">Number of times the thread should be slept (for <see cref="WAIT_SLEEP"/> milliseconds) before the wait is cancelled.</param>
+    /// <param name="token">Cancellation token to cancel the operation.</param>
     ValueTask<bool> ForAsync(Func<object> function, object value, int timeout = 10, CancellationToken token = default);
 
     /// <summary>
@@ -357,6 +358,7 @@ public interface IScriptWait
     /// <param name="predicate">Function to poll.</param>
     /// <param name="timeout">Number of times the thread should be slept (for <see cref="WAIT_SLEEP"/> milliseconds) before the wait is cancelled.</param>
     /// <param name="sleepOverride">Time to sleep between polling the <paramref name="predicate"/> function (-1 = <see cref="WAIT_SLEEP"/>).</param>
+    /// <param name="token">Cancellation token to cancel the operation.</param>
     ValueTask<bool> ForTrueAsync(Func<bool> predicate, int timeout, int sleepOverride = -1, CancellationToken token = default);
 
     /// <summary>

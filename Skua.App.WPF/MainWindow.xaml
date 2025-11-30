@@ -1,8 +1,9 @@
-﻿<wpf:CustomWindow
+<wpf:CustomWindow
     x:Class="Skua.App.WPF.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:controls="clr-namespace:Skua.WPF.UserControls;assembly=Skua.WPF"
+    xmlns:views="clr-namespace:Skua.WPF.Views;assembly=Skua.WPF"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Skua.App.WPF"
     xmlns:materialdesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -12,7 +13,7 @@
     xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
     xmlns:wpf="clr-namespace:Skua.WPF;assembly=Skua.WPF"
     Title="{Binding Title}"
-    Width="948"
+    Width="1250"
     Height="600"
     d:DataContext="{d:DesignInstance vms:MainViewModel}"
     Style="{StaticResource CustomWindow}"
@@ -20,7 +21,60 @@
     <Grid>
         <DockPanel>
             <controls:MainMenuUserControl Panel.ZIndex="10" DockPanel.Dock="Top" />
-            <controls:GameContainerUserControl />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="300" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                
+                <!-- Left Panel: Script Loader (Always Visible) -->
+                <Border Grid.Column="0" BorderBrush="{DynamicResource MaterialDesignDivider}" BorderThickness="0,0,1,0">
+                    <views:ScriptLoaderView x:Name="ScriptLoaderPanel" />
+                </Border>
+                
+                <!-- GridSplitter -->
+                <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Center" VerticalAlignment="Stretch" Background="Transparent" />
+                
+                <!-- Right Panel: Game or Script Repo -->
+                <Grid Grid.Column="2">
+                    <!-- Game Container - Hidden when ScriptRepo is visible -->
+                    <controls:GameContainerUserControl x:Name="GameContainer" />
+                    
+                    <!-- Script Repo Panel (replaces game when visible) -->
+                    <Grid x:Name="ScriptRepoPanel" Visibility="Collapsed" Background="{DynamicResource MaterialDesignPaper}" Panel.ZIndex="100">
+                        <DockPanel>
+                            <!-- Header with Back Button -->
+                            <Border DockPanel.Dock="Top" 
+                                    Background="{DynamicResource PrimaryHueMidBrush}" 
+                                    Padding="8,6">
+                                <DockPanel>
+                                    <Button DockPanel.Dock="Left"
+                                            Click="BackToGame_Click"
+                                            Style="{StaticResource MaterialDesignFlatLightBgButton}"
+                                            Foreground="White"
+                                            ToolTip="Back to Game">
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialdesign:PackIcon Kind="ArrowLeft" VerticalAlignment="Center" />
+                                            <TextBlock Text="Back" Margin="6,0,0,0" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </Button>
+                                    <TextBlock Text="Search Scripts" 
+                                               Foreground="White"
+                                               FontSize="16" 
+                                               FontWeight="SemiBold"
+                                               VerticalAlignment="Center"
+                                               HorizontalAlignment="Center"
+                                               Margin="0,0,80,0" />
+                                </DockPanel>
+                            </Border>
+                            
+                            <!-- Script Repo Content -->
+                            <views:ScriptRepoView x:Name="ScriptRepoContent" />
+                        </DockPanel>
+                    </Grid>
+                </Grid>
+            </Grid>
         </DockPanel>
         <tb:TaskbarIcon
             x:Name="NotifyIcon"
